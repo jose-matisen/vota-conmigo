@@ -17,7 +17,7 @@ const Detalle = ({ onPrevious, onSubmit }: DetalleProps) => {
   }; */
 
   return (
-    <div className="flex flex-col h-screen justify-center items-center">
+    <div className="flex flex-col  justify-center items-center">
       <div>
         <h1
           className="text-4xl font-bold  text-center text-white"
@@ -32,7 +32,7 @@ const Detalle = ({ onPrevious, onSubmit }: DetalleProps) => {
       <div className="mt-4">
        <p>Aquí iria el detalle</p>
       </div>
-      <div className="mt-10 flex flex-wrap gap-2 justify-center items-center text-center">
+      <div className="mt-10  mb-12 flex flex-wrap gap-2 justify-center items-center text-center">
         <Button
           type="submit"
           className="shadow-xl bg-slate-500/90 text-white w-32"

@@ -5,8 +5,8 @@ import { Props } from "../interfaces/props.interface";
 
 const Inicio = ({ onNext }: Props) => {
   return (
-    <div className="flex flex-col h-screen justify-center items-center">
-      <div className="">
+    <div className="flex flex-col justify-center items-center">
+      <div className="mt-5 ">
         <h1
           className="text-4xl font-bold  text-center text-white"
           style={{
@@ -30,7 +30,7 @@ const Inicio = ({ onNext }: Props) => {
         </div>
       </div>
 
-      <div className="mt-2 text-center">
+      <div className="mt-2 mb-12 text-center">
         <Button
           type="submit"
           size="lg"

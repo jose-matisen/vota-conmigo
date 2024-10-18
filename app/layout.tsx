@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
-import AnimatedBackground from "./components/AnimatedBackground";
+
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -27,10 +27,9 @@ export default function RootLayout({
   return (
     <html lang="es">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased h-screen  bg-gray-300`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased animated-gradient min-h-svh `}
       >
-        <AnimatedBackground />
-        <div className="relative z-10">{children}</div>
+        <div className="relative z-10 ">{children}</div>
       </body>
     </html>
   );

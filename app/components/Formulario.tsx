@@ -30,8 +30,8 @@ const Formulario = ({ onNext, onPrevious }: Props) => {
     }
   };
   return (
-    <div className="flex flex-col h-screen justify-center items-center">
-      <div className="justify-center flex">
+    <div className="flex flex-col justify-center items-center">
+      <div className="justify-center mt-6 flex">
         <Input
           type="text"
           label="Ingrese su RUT"
@@ -99,7 +99,7 @@ const Formulario = ({ onNext, onPrevious }: Props) => {
       </div>
       <div className="mt-3 flex justify-center">
         <Calendar
-                  
+                  classNames={{content: "bg-white"}}
           aria-label="Date (Min Date Value)"
           defaultValue={parseDate("2024-10-26")}
           minValue={parseDate("2024-10-26")}
@@ -112,12 +112,14 @@ const Formulario = ({ onNext, onPrevious }: Props) => {
           size="lg"
           granularity="minute"
           hourCycle={24}
+          className="w-40"
+          classNames={{input: "flex justify-center items-center text-[20px]", label: "flex justify-center items-center text-[17px]"}}
           defaultValue={parseZonedDateTime(
             "2024-10-18T11:45[America/Santiago]"
           )}
         />
       </div>
-      <div className="mt-7 flex flex-wrap gap-2 justify-center items-center text-center">
+      <div className="mt-7  mb-12 flex flex-wrap gap-2 justify-center items-center text-center">
         <Button
           type="submit"
           className="shadow-xl bg-slate-500/90 text-white w-32"

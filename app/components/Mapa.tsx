@@ -3,6 +3,7 @@
 // IMPORTANT: the order matters!
 import "leaflet/dist/leaflet.css";
 import "leaflet-defaulticon-compatibility/dist/leaflet-defaulticon-compatibility.webpack.css";
+import 'leaflet-defaulticon-compatibility';
 import "leaflet.fullscreen";
 import {
   MapContainer,
@@ -49,11 +50,12 @@ export default function Map({ onNext, onPrevious }: Props) {
   }
 
   return (
-    <div className="flex flex-col h-screen justify-center items-center">
+    <div className="flex flex-col justify-center items-center">
       <MapContainer
         center={[-34.2911874, -71.081676]} // Coordenadas por defecto si no se encuentra la ubicación
         zoom={14}
         scrollWheelZoom={true}
+        className="mt-5"
         style={{ height: "600px", width: "90%" }}
       >
         <TileLayer
@@ -62,7 +64,7 @@ export default function Map({ onNext, onPrevious }: Props) {
         />
         <LocationMarker />
       </MapContainer>
-      <div className="mt-10 flex flex-wrap gap-2 justify-center items-center text-center">
+      <div className="mt-10  mb-12 flex flex-wrap gap-2 justify-center items-center text-center">
         <Button
           type="submit"
           className="shadow-xl bg-slate-500/90 text-white w-32"
