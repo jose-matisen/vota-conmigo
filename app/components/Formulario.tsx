@@ -93,13 +93,13 @@ const Formulario = ({ onNext, onPrevious }: Props) => {
           label="Calle"
           size={"lg"}
           variant="flat"
-          className="w-96"
+          className="w-96 "
           classNames={{ inputWrapper: "shadow-xl", label: "text-center" }}
         />
       </div>
       <div className="mt-3 flex justify-center">
         <Calendar
-                  classNames={{content: "bg-white"}}
+                  classNames={{content: "bg-white text-xl ", title: "font-bold" }}
           aria-label="Date (Min Date Value)"
           defaultValue={parseDate("2024-10-26")}
           minValue={parseDate("2024-10-26")}
@@ -108,21 +108,22 @@ const Formulario = ({ onNext, onPrevious }: Props) => {
       </div>
       <div className="m-3">
         <TimeInput
-          label="Ingrese Hora"
+          label="Ingrese Hora de encuentro"
           size="lg"
           granularity="minute"
+          color="primary"
           hourCycle={24}
-          className="w-40"
-          classNames={{input: "flex justify-center items-center text-[20px]", label: "flex justify-center items-center text-[17px]"}}
+          className="w-64"
+          classNames={{input: "flex justify-center items-center mb-3 text-[24px] font-bold", label: "font-medium flex justify-center items-center text-[17px]"}}
           defaultValue={parseZonedDateTime(
-            "2024-10-18T11:45[America/Santiago]"
+            "2024-10-18T11:00[America/Santiago]"
           )}
         />
       </div>
       <div className="mt-7  mb-12 flex flex-wrap gap-2 justify-center items-center text-center">
         <Button
           type="submit"
-          className="shadow-xl bg-slate-500/90 text-white w-32"
+          className="shadow-xl bg-slate-500/90 text-white w-32 text-xl"
           onClick={onPrevious} // Avanza al siguiente paso
           size="lg"
         >
@@ -130,7 +131,7 @@ const Formulario = ({ onNext, onPrevious }: Props) => {
         </Button>
         <Button
           type="submit"
-          className="shadow-xl bg-blue-500 text-white w-32"
+          className="shadow-xl bg-blue-500 text-white w-32 text-xl"
           onClick={onNext} // Avanza al siguiente paso
           size="lg"
           isDisabled={isInvalid}

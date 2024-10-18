@@ -35,7 +35,7 @@ const Detalle = ({ onPrevious, onSubmit }: DetalleProps) => {
       <div className="mt-10  mb-12 flex flex-wrap gap-2 justify-center items-center text-center">
         <Button
           type="submit"
-          className="shadow-xl bg-slate-500/90 text-white w-32"
+          className="shadow-xl bg-slate-500/90 text-white w-32 text-xl"
           onClick={onPrevious} // Avanza al siguiente paso
           size="lg"
         >
@@ -44,7 +44,7 @@ const Detalle = ({ onPrevious, onSubmit }: DetalleProps) => {
         <Button
           type="submit"
           size="lg"
-          className="shadow-xl bg-green-600 text-white w-32"
+          className="shadow-xl bg-green-600 text-white w-32 text-xl"
         >
           Confirmar
         </Button>

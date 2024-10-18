@@ -67,7 +67,7 @@ export default function Map({ onNext, onPrevious }: Props) {
       <div className="mt-10  mb-12 flex flex-wrap gap-2 justify-center items-center text-center">
         <Button
           type="submit"
-          className="shadow-xl bg-slate-500/90 text-white w-32"
+          className="shadow-xl bg-slate-500/90 text-white w-32 text-xl"
           onClick={onPrevious} // Avanza al siguiente paso
           size="lg"
         >
@@ -75,7 +75,7 @@ export default function Map({ onNext, onPrevious }: Props) {
         </Button>
         <Button
           type="submit"
-          className="shadow-xl bg-blue-500 text-white w-32"
+          className="shadow-xl bg-blue-500 text-white w-32 text-xl"
           onClick={onNext} // Avanza al siguiente paso
           size="lg"
         >
