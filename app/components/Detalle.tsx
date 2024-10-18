@@ -1,6 +1,7 @@
 "use client";
 
 import { Button } from "@nextui-org/button";
+import { useEffect } from "react";
 
 interface DetalleProps {
   onPrevious?: () => void;
@@ -15,6 +16,10 @@ const Detalle = ({ onPrevious, onSubmit }: DetalleProps) => {
     };
     onSubmit(data); // Llama a la función de envío
   }; */
+
+  useEffect(() => {
+    window.scrollTo(0, 0); // Mueve el scroll a la parte superior de la página
+  }, []);
 
   return (
     <div className="flex flex-col  justify-center items-center">

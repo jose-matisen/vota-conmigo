@@ -19,7 +19,7 @@ const Inicio = ({ onNext }: Props) => {
         <div className="bg-slate-100 mt-2 border-black rounded-xl shadow-lg w-80 lg:w-96">
           <p className="text-[22px] text-center p-3.5 mt-5 mb-11 text-balance">
             Esta página está diseñada para ayudar a las personas que tienen
-            dificultades para trasladarse a los lugares de votación. Si
+            dificultades para trasladarse a los lugares de votación en Coltauco. Si
             necesitas ayuda para llegar a votar el <span className="underline underline-offset-2 decoration-2 decoration-red-500 font-medium">26</span> y <span className="underline underline-offset-2 decoration-2 decoration-red-500 font-medium">27</span> de este mes,
             simplemente completa tu información personal y tu ubicación aquí.
             Durante esos días, un equipo de voluntarios estará disponible para
