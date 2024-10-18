@@ -16,11 +16,11 @@ const Inicio = ({ onNext }: Props) => {
         >
           VOTA CONMIGO
         </h1>
-        <div className="bg-slate-100 mt-2 border-black rounded-xl shadow-lg w-96">
-          <p className="text-2xl text-center p-3.5 mt-5 mb-11 text-balance">
+        <div className="bg-slate-100 mt-2 border-black rounded-xl shadow-lg w-80 lg:w-96">
+          <p className="text-[22px] text-center p-3.5 mt-5 mb-11 text-balance">
             Esta página está diseñada para ayudar a las personas que tienen
             dificultades para trasladarse a los lugares de votación. Si
-            necesitas ayuda para llegar a votar el 26 y 27 de este mes,
+            necesitas ayuda para llegar a votar el <span className="underline underline-offset-2 decoration-2 decoration-red-500 font-medium">26</span> y <span className="underline underline-offset-2 decoration-2 decoration-red-500 font-medium">27</span> de este mes,
             simplemente completa tu información personal y tu ubicación aquí.
             Durante esos días, un equipo de voluntarios estará disponible para
             recoger a quienes lo necesiten y llevarlos a su respectivo lugar de

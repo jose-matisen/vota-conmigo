@@ -56,7 +56,7 @@ export default function Map({ onNext, onPrevious }: Props) {
         zoom={14}
         scrollWheelZoom={true}
         className="mt-5"
-        style={{ height: "600px", width: "90%" }}
+        style={{ height: "50vh", width: "88%" }}
       >
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'

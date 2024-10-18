@@ -3,7 +3,7 @@
 import { Button } from "@nextui-org/button";
 import { Props } from "../interfaces/props.interface";
 import { Input } from "@nextui-org/input";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { validate, format } from "rut.js";
 import { Calendar } from "@nextui-org/calendar";
 import {
@@ -29,6 +29,9 @@ const Formulario = ({ onNext, onPrevious }: Props) => {
       setisRut(format(isRut));
     }
   };
+  useEffect(() => {
+    window.scrollTo(0, 0); // Mueve el scroll a la parte superior de la página
+  }, []);
   return (
     <div className="flex flex-col justify-center items-center">
       <div className="justify-center mt-6 flex">
@@ -43,7 +46,7 @@ const Formulario = ({ onNext, onPrevious }: Props) => {
           errorMessage="Rut Incorrecto"
           onValueChange={(e) => setisRut(format(e))}
           onBlur={handleOnBlur}
-          className="w-96"
+          className="w-80 lg:w-96"
           classNames={{ inputWrapper: "shadow-xl", label: "text-center" }}
         />
       </div>
@@ -53,7 +56,7 @@ const Formulario = ({ onNext, onPrevious }: Props) => {
           label="Nombre Completo"
           size={"lg"}
           variant="flat"
-          className="w-96"
+          className="w-80 lg:w-96"
           classNames={{ inputWrapper: "shadow-xl", label: "text-center" }}
         />
       </div>
@@ -63,7 +66,7 @@ const Formulario = ({ onNext, onPrevious }: Props) => {
           label="Correo Electronico"
           size={"lg"}
           variant="flat"
-          className="w-96"
+          className="w-80 lg:w-96"
           classNames={{ inputWrapper: "shadow-xl", label: "text-center" }}
         />
       </div>
@@ -73,7 +76,7 @@ const Formulario = ({ onNext, onPrevious }: Props) => {
           label="Numero de telefono"
           size={"lg"}
           variant="flat"
-          className="w-96"
+          className="w-80 lg:w-96"
           classNames={{ inputWrapper: "shadow-xl", label: "text-center" }}
         />
       </div>
@@ -83,7 +86,7 @@ const Formulario = ({ onNext, onPrevious }: Props) => {
           label="Sector"
           size={"lg"}
           variant="flat"
-          className="w-96"
+          className="w-80 lg:w-96"
           classNames={{ inputWrapper: "shadow-xl", label: "text-center" }}
         />
       </div>
@@ -93,7 +96,7 @@ const Formulario = ({ onNext, onPrevious }: Props) => {
           label="Calle"
           size={"lg"}
           variant="flat"
-          className="w-96 "
+          className="w-80 lg:w-96 "
           classNames={{ inputWrapper: "shadow-xl", label: "text-center" }}
         />
       </div>
