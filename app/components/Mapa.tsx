@@ -127,8 +127,24 @@ export default function Mapa({ onNext, onPrevious }: Props) {
 
       if (data.results && data.results.length > 0) {
         const { lat, lng } = data.results[0].geometry.location;
-
-        setPosition(new LatLng(lat, lng));
+        const { long_name } = data.results[0].address_components[0];
+        if (long_name == "Coltauco") {
+          if (ciudadano && ciudadano.latitud_mapa && ciudadano.longitud_mapa) {
+            setPosition(
+              new LatLng(ciudadano.latitud_mapa, ciudadano.longitud_mapa)
+            );
+          } else if (
+            ciudadano &&
+            ciudadano.latitud_sector &&
+            ciudadano.longitud_sector
+          ) {
+            setPosition(
+              new LatLng(ciudadano.latitud_sector, ciudadano.longitud_sector)
+            );
+          }
+        } else {
+          setPosition(new LatLng(lat, lng));
+        }
       } else {
         setTitle(
           "No pudimos encontrar tu ubicación exacta, ¿nos ayudas a encontrarla?"
@@ -177,7 +193,7 @@ export default function Mapa({ onNext, onPrevious }: Props) {
       const ciudadano = JSON.parse(ciudadanoSotrage as string);
       setCiudadano(ciudadano);
       obtenerCoordenadas(
-        encodeURIComponent(`${ciudadano.sector} ${ciudadano.calle}`),
+        encodeURIComponent(`${ciudadano.sector} Coltauco`),
         ciudadano
       );
     }

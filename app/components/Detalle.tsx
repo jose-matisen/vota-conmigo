@@ -134,7 +134,7 @@ const Detalle = ({ onPrevious, onNext }: Props) => {
           size="lg"
           className="shadow-xl bg-green-600 text-white text-xl"
           onClick={() => {
-            toast.success("Excelente", { duration: 4000 });
+            toast.success("Excelente", { duration: 1500 });
             onNext();
           }}
         >

@@ -1,10 +1,12 @@
 "use client";
 import { Button } from "@nextui-org/button";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
 const Felicidades = () => {
-  const router = useRouter();
+  useEffect(() => {
+    window.scrollTo(0, 0); // Mueve el scroll a la parte superior de la página
+  }, []);
   return (
     <div className="flex flex-col justify-center items-center">
       <div>
