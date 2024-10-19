@@ -4,6 +4,7 @@ import Inicio from "./components/Inicio";
 import { useState } from "react";
 import Formulario from "./components/Formulario";
 import Detalle from "./components/Detalle";
+import Felicidades from "./components/Felicidades";
 const LazyMap = dynamic(() => import("./components/Mapa"), {
   ssr: false,
   loading: () => <p>Loading...</p>,
@@ -28,7 +29,8 @@ export default function Home() {
       {step === 0 && <Inicio onNext={handleNext}  />}
       {step === 1 && <Formulario onNext={handleNext} onPrevious={handlePrevious} />}
       {step === 2 && <LazyMap onNext={handleNext} onPrevious={handlePrevious}/>}
-      {step === 3 && <Detalle onSubmit={handleSubmit} onPrevious={handlePrevious}/>}
+      {step === 3 && <Detalle onPrevious={handlePrevious} onNext={handleNext}/>}
+      {step === 4 && <Felicidades />}
     </div>
   );
 }

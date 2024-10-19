@@ -10,6 +10,7 @@ import {
   Marker,
   Popup,
   TileLayer,
+  useMap,
   useMapEvents,
 } from "react-leaflet";
 import { LatLng, Map } from "leaflet";
@@ -18,17 +19,25 @@ import { Props } from "../interfaces/props.interface";
 import { Button } from "@nextui-org/button";
 import { Ciudadano } from "@/interfaces/ciudadano.interface";
 import ReactGoogleAutocomplete from "react-google-autocomplete";
+import toast from "react-hot-toast";
+import { crearDoc } from "@/lib/firebase";
+import { LoaderCircle } from "lucide-react";
 
 export default function Mapa({ onNext, onPrevious }: Props) {
   const [draggable, setDraggable] = useState(true);
   const [locationError, setLocationError] = useState<boolean>(false);
+  const [isLoading, setisLoading] = useState<boolean>(false);
   const [position, setPosition] = useState<LatLng>(
     new LatLng(-34.2911874, -71.081676)
   );
-  const [obtenerUbucacion, setObtenerUbucacion] = useState(false);
-  const [ciudadano, setCiudadano] = useState<Ciudadano>();
 
+  const [obtenerUbicacion, setObtenerUbicacion] = useState(false);
+  const [ciudadano, setCiudadano] = useState<Ciudadano>();
+  const [title, setTitle] = useState(
+    "De acuerdo con la dirección que nos proporcionaste, ¿es correcta esta ubicación?"
+  );
   const markerRef = useRef<any>(null);
+
   const eventHandlers = useMemo(
     () => ({
       dragend() {
@@ -49,7 +58,7 @@ export default function Mapa({ onNext, onPrevious }: Props) {
   function LocationMarker() {
     map = useMapEvents({
       locationfound(e) {
-        if (obtenerUbucacion) {
+        if (obtenerUbicacion) {
           if (position.lat != e.latlng.lat && position.lng != e.latlng.lng) {
             setPosition(e.latlng); // Establecer la posición solo si aún no ha sido definida
             map.flyTo(e.latlng, map.getZoom()); // Vuela a la ubicación del usuario una sola vez
@@ -63,10 +72,12 @@ export default function Mapa({ onNext, onPrevious }: Props) {
     });
 
     useEffect(() => {
-      if (obtenerUbucacion) {
+      if (obtenerUbicacion) {
         map.locate({ setView: true, maxZoom: 15 }); // Solicita la ubicación al cargar el componente solo una vez
+      } else {
+        map.flyTo(position, map.getZoom());
       }
-    }, [map, obtenerUbucacion]);
+    }, [map, obtenerUbicacion]);
 
     return position === null ? null : (
       <Marker
@@ -79,25 +90,82 @@ export default function Mapa({ onNext, onPrevious }: Props) {
       </Marker>
     );
   }
-  const obtenerCoordenadas = async (address: string) => {
+  const handleObtenerUbicacion = async (event: any) => {
+    event.preventDefault();
+    setisLoading(true);
+    const data = {
+      ...ciudadano,
+      latitud_mapa: position.lat,
+      longitud_mapa: position.lng,
+    };
+    const toastId = toast.loading("Guardando...");
+    const resultado = await crearDoc(data as Ciudadano);
+
+    if (resultado) {
+      toast.success("Información Guardada", {
+        id: toastId,
+        duration: 2500,
+      });
+      sessionStorage.setItem("ciudadano", JSON.stringify(resultado));
+      onNext();
+      setisLoading(false);
+    } else {
+      toast.error("Error al guardar la información", {
+        id: toastId,
+        duration: 2500,
+      });
+      setisLoading(false);
+    }
+  };
+  const obtenerCoordenadas = async (address: string, ciudadano?: Ciudadano) => {
     const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API;
     const url = `https://maps.googleapis.com/maps/api/geocode/json?address=${address}&key=${apiKey}`;
 
     try {
       const response = await fetch(url);
       const data = await response.json();
-     
+
       if (data.results && data.results.length > 0) {
         const { lat, lng } = data.results[0].geometry.location;
 
         setPosition(new LatLng(lat, lng));
-        map.flyTo(new LatLng(lat, lng), map.getZoom());
       } else {
-        setPosition(new LatLng(-34.2911874, -71.081676));
-        map.flyTo(new LatLng(-34.2911874, -71.081676), map.getZoom());
+        setTitle(
+          "No pudimos encontrar tu ubicación exacta, ¿nos ayudas a encontrarla?"
+        );
+        if (ciudadano && ciudadano.latitud_mapa && ciudadano.longitud_mapa) {
+          setPosition(
+            new LatLng(ciudadano.latitud_mapa, ciudadano.longitud_mapa)
+          );
+        } else if (
+          ciudadano &&
+          ciudadano.latitud_sector &&
+          ciudadano.longitud_sector
+        ) {
+          setPosition(
+            new LatLng(ciudadano.latitud_sector, ciudadano.longitud_sector)
+          );
+        }
       }
     } catch (error) {
       console.error("Error al obtener las coordenadas:", error);
+
+      setTitle(
+        "No pudimos encontrar tu ubicación exacta, ¿nos ayudas a encontrarla?"
+      );
+      if (ciudadano && ciudadano.latitud_mapa && ciudadano.longitud_mapa) {
+        setPosition(
+          new LatLng(ciudadano.latitud_mapa, ciudadano.longitud_mapa)
+        );
+      } else if (
+        ciudadano &&
+        ciudadano.latitud_sector &&
+        ciudadano.longitud_sector
+      ) {
+        setPosition(
+          new LatLng(ciudadano.latitud_sector, ciudadano.longitud_sector)
+        );
+      }
     }
   };
   function obtenerInformacionCiudadano() {
@@ -107,9 +175,11 @@ export default function Mapa({ onNext, onPrevious }: Props) {
     ) {
       let ciudadanoSotrage = sessionStorage.getItem("ciudadano");
       const ciudadano = JSON.parse(ciudadanoSotrage as string);
-      console.log(ciudadano);
       setCiudadano(ciudadano);
-      obtenerCoordenadas(encodeURIComponent(`${ciudadano.sector} ${ciudadano.calle}`));
+      obtenerCoordenadas(
+        encodeURIComponent(`${ciudadano.sector} ${ciudadano.calle}`),
+        ciudadano
+      );
     }
   }
   useEffect(() => {
@@ -126,8 +196,7 @@ export default function Mapa({ onNext, onPrevious }: Props) {
             " 3px 3px 0 #000, -1px -1px 0 #000, 2px -1px 0 #000, -1px 1px 0 #000, 2px 2px 2px #000",
         }}
       >
-        De acuerdo con la dirección que nos proporcionaste, {"\n"}
-        ¿es correcta esta ubicación?
+        {title}
       </h1>
       <MapContainer
         center={position} // Coordenadas por defecto si no se encuentra la ubicación
@@ -148,24 +217,23 @@ export default function Mapa({ onNext, onPrevious }: Props) {
           color={"danger"}
           className="shadow-xl text-lg"
           size="md"
-          onClick={() => setObtenerUbucacion(true)}
+          onClick={() => setObtenerUbicacion(true)}
         >
           Obtener Ubicación real
         </Button>
         <Button
           type="button"
-          color={"primary"}
-          className="shadow-xl text-lg"
+          className="shadow-xl text-lg text-white bg-amber-500"
           size="md"
           onClick={() => {
-            setObtenerUbucacion(false);
+            setObtenerUbicacion(false);
             obtenerInformacionCiudadano();
           }}
         >
           Quitar Ubicación real
         </Button>
       </div>
-      
+
       <div className="mt-10  mb-12 flex flex-wrap gap-2 justify-center items-center text-center">
         <Button
           type="button"
@@ -177,11 +245,17 @@ export default function Mapa({ onNext, onPrevious }: Props) {
         </Button>
         <Button
           type="submit"
-          className="shadow-xl bg-green-600 text-white  text-xl"
-          onClick={onNext} // Avanza al siguiente paso
+          className={` ${
+            isLoading ? "bg-blue-500/50" : "bg-blue-500"
+          } shadow-xl  text-white text-xl`}
           size="lg"
+          disabled={isLoading}
+          onClick={handleObtenerUbicacion} // Avanza al siguiente paso
         >
           Continuar
+          {isLoading && (
+            <LoaderCircle className="inline h-6 ml-2 animate-spin" />
+          )}
         </Button>
       </div>
       {/* Mostrar mensaje de error si la ubicación falla */}

@@ -1,7 +1,19 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
-import { getFirestore, doc, collection, setDoc } from "firebase/firestore";
+import {
+  getFirestore,
+  doc,
+  collection,
+  setDoc,
+  updateDoc,
+  query,
+  where,
+  getDocs,
+  limit,
+  serverTimestamp,
+} from "firebase/firestore";
+import { Ciudadano } from "@/interfaces/ciudadano.interface";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -22,12 +34,32 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 //const analytics = getAnalytics(app);
 
-export async function crearDoc(data: any) {
-  const path = "cuidadanos";
+export async function crearDoc(data: Ciudadano) {
+  const path = "ciudadanos";
   try {
-    const docRef = doc(collection(db, path));
-    await setDoc(docRef, { uid: docRef.id, ...data });
-    return { uid: docRef.id, ...data };
+    const q = query(
+      collection(db, path),
+      where("rut", "==", data.rut),
+      limit(1)
+    );
+
+    const querySnapshot = await getDocs(q);
+    if (querySnapshot.size == 1) {
+      querySnapshot.forEach(async (documentos) => {
+        // doc.data() is never undefined for query doc snapshots
+        console.log(documentos.id, " => ", documentos.data());
+        const usuarioRef = doc(db, path, documentos.id);
+        await updateDoc(usuarioRef, { ...data, update_at: serverTimestamp() });
+      });
+    } else if (querySnapshot.size == 0) {
+      const docRef = doc(collection(db, path));
+      await setDoc(docRef, {
+        uid: docRef.id,
+        ...data,
+        created_at: serverTimestamp(),
+      });
+    }
+    return { ...data };
   } catch (error) {
     return false;
   }

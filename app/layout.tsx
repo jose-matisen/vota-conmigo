@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
+import { NextUIProvider } from "@nextui-org/system";
 import "./globals.css";
-
+import { Toaster } from "react-hot-toast";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -29,7 +30,10 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased animated-gradient min-h-svh `}
       >
+        <NextUIProvider>
         <div className="relative z-10 ">{children}</div>
+        </NextUIProvider>
+        <Toaster />
       </body>
     </html>
   );

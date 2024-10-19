@@ -10,6 +10,7 @@ import toast from "react-hot-toast";
 import { LoaderCircle } from "lucide-react";
 import {
   CalendarDate,
+  fromDate,
   getLocalTimeZone,
   parseAbsoluteToLocal,
   parseDate,
@@ -31,13 +32,17 @@ import { Ciudadano } from "@/interfaces/ciudadano.interface";
 import ReactGoogleAutocomplete from "react-google-autocomplete";
 
 const Formulario = ({ onNext, onPrevious }: Props) => {
+  const [ciudadano, setCiudadano] = useState<Ciudadano>();
   const [isLoading, setisLoading] = useState<boolean>(false);
   const [isRut, setisRut] = useState<string>("");
-  const [dia, setDia] = useState(parseDate("2024-10-26"));
+  const [dia, setDia] = useState(() => {
+    return ciudadano?.fecha_encuentro
+      ? fromDate(new Date(ciudadano.fecha_encuentro), getLocalTimeZone())
+      : parseDate("2024-10-26");
+  });
   const [hora, setHora] = useState(
     parseZonedDateTime("2024-10-18T11:00[America/Santiago]")
   );
-  const [ciudadano, setCiudadano] = useState<Ciudadano>();
 
   const isInvalid = useMemo(() => {
     if (isRut === "") return false;
@@ -107,7 +112,6 @@ const Formulario = ({ onNext, onPrevious }: Props) => {
     clearErrors,
   } = form;
   const { errors } = formState;
-  console.log(errors);
 
   let formatterHora = useDateFormatter({
     dateStyle: "short",
@@ -116,6 +120,8 @@ const Formulario = ({ onNext, onPrevious }: Props) => {
 
   const onSubmit = async (cuidadano: z.infer<typeof schema>) => {
     setisLoading(true);
+    let sector = localidades.find((item) => item.value === cuidadano.sector);
+
     const data = {
       rut: format(cuidadano.rut),
       nombre_completo: cuidadano.nombre_completo,
@@ -123,10 +129,12 @@ const Formulario = ({ onNext, onPrevious }: Props) => {
       telefono: cuidadano.telefono,
       sector: cuidadano.sector,
       calle: cuidadano.calle,
-      fecha: dia.toDate(getLocalTimeZone()),
-      hora_encuentro: formatterHora.format(hora.toDate()),
+      fecha_encuentro: dia.toDate(getLocalTimeZone()),
+      hora_encuentro: hora.toDate(),
+      latitud_sector: sector ? sector.latitud : 0,
+      longitud_sector: sector ? sector.longitud : 0,
     };
-    console.log(data);
+
     const toastId = toast.loading("Guardando...");
     const resultado = await crearDoc(data);
 
@@ -135,7 +143,7 @@ const Formulario = ({ onNext, onPrevious }: Props) => {
         id: toastId,
         duration: 2500,
       });
-      sessionStorage.setItem("ciudadano", JSON.stringify(data));
+      sessionStorage.setItem("ciudadano", JSON.stringify(resultado));
       onNext();
       setisLoading(false);
     } else {
@@ -155,6 +163,17 @@ const Formulario = ({ onNext, onPrevious }: Props) => {
       let ciudadanoSotrage = sessionStorage.getItem("ciudadano");
       const ciudadano = JSON.parse(ciudadanoSotrage as string);
       setCiudadano(ciudadano);
+      const fechaRecuperada = fromDate(
+        new Date(ciudadano.fecha_encuentro),
+        getLocalTimeZone()
+      );
+      setDia(fechaRecuperada);
+
+      const horaRecuperada = fromDate(
+        new Date(ciudadano.hora_encuentro),
+        getLocalTimeZone()
+      );
+      setHora(horaRecuperada);
       reset({
         rut: ciudadano.rut,
         nombre_completo: ciudadano.nombre_completo,
@@ -211,7 +230,7 @@ const Formulario = ({ onNext, onPrevious }: Props) => {
         <div className="mt-3 flex justify-center">
           <Input
             type="text"
-            label="Correo Electronico"
+            label="Correo Electrónico"
             size={"lg"}
             variant="flat"
             className="w-80 lg:w-96"
@@ -224,7 +243,7 @@ const Formulario = ({ onNext, onPrevious }: Props) => {
         <div className="mt-3 flex justify-center">
           <Input
             type="text"
-            label="Numero de telefono"
+            label="Número de teléfono"
             size={"lg"}
             isRequired
             variant="flat"
@@ -268,7 +287,7 @@ const Formulario = ({ onNext, onPrevious }: Props) => {
             {...register("calle")}
           />
         </div>
-       {/*  <div>
+        {/*  <div>
           <ReactGoogleAutocomplete
             apiKey={"AIzaSyAk2TCBSgd5wkGy4KAXYhZiGEXXiR_Degk"}
             style={{ width: "90%" }}
@@ -290,18 +309,20 @@ const Formulario = ({ onNext, onPrevious }: Props) => {
             minValue={parseDate("2024-10-26")}
             maxValue={parseDate("2024-10-27")}
             onChange={setDia}
+            value={dia}
           />
         </div>
         <div className="m-3">
           <TimeInput
             isRequired
-            label="Ingrese Hora de encuentro"
+            label="Ingrese la hora de encuentro"
             size="lg"
             granularity="minute"
             color="primary"
             hourCycle={24}
             className="w-64"
             onChange={setHora}
+            value={hora}
             classNames={{
               input:
                 "flex justify-center items-center mb-3 text-[24px] font-bold",
@@ -315,19 +336,24 @@ const Formulario = ({ onNext, onPrevious }: Props) => {
         <div className="mt-7  mb-12 flex flex-wrap gap-2 justify-center items-center text-center">
           <Button
             type="button"
-            className="shadow-xl bg-slate-500/90 text-white w-32 text-xl"
+            className={`${
+              isLoading ? "bg-slate-500/50" : "bg-slate-500/90"
+            } shadow-xl  text-white w-32 text-xl`}
             onClick={onPrevious} // Avanza al siguiente paso
             size="lg"
+            disabled={isLoading}
           >
             Atras
           </Button>
           <Button
             type="submit"
-            className="shadow-xl bg-blue-500 text-white w-32 text-xl"
+            className={` ${
+              isLoading ? "bg-blue-500/50" : "bg-blue-500"
+            } shadow-xl  text-white text-xl`}
             size="lg"
             disabled={isLoading}
           >
-            Continuar{" "}
+            Continuar
             {isLoading && (
               <LoaderCircle className="inline h-6 ml-2 animate-spin" />
             )}
