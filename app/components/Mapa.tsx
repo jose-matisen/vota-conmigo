@@ -38,8 +38,6 @@ export default function Mapa({ onNext, onPrevious }: Props) {
   );
   const markerRef = useRef<any>(null);
 
-  if (!obtenerUbicacion) obtenerInformacionCiudadano();
-
   const eventHandlers = useMemo(
     () => ({
       dragend() {
@@ -235,9 +233,14 @@ export default function Mapa({ onNext, onPrevious }: Props) {
           className={`${
             obtenerUbicacion ? " bg-amber-500" : "bg-red-600"
           } shadow-xl text-white text-lg`}
-         
           size="lg"
-          onClick={() => setObtenerUbicacion(!obtenerUbicacion)}
+          onClick={() => {
+            if (obtenerUbicacion) {
+              console.log("pase");
+              obtenerInformacionCiudadano();
+            }
+            setObtenerUbicacion(!obtenerUbicacion);
+          }}
         >
           {!obtenerUbicacion
             ? "Obtener Ubicación Actual"
