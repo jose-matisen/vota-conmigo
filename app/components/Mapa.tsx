@@ -38,6 +38,8 @@ export default function Mapa({ onNext, onPrevious }: Props) {
   );
   const markerRef = useRef<any>(null);
 
+  if (!obtenerUbicacion) obtenerInformacionCiudadano();
+
   const eventHandlers = useMemo(
     () => ({
       dragend() {
@@ -230,23 +232,16 @@ export default function Mapa({ onNext, onPrevious }: Props) {
       <div className="flex mt-4 w-52 flex-wrap gap-2 justify-center items-center text-center">
         <Button
           type="button"
-          color={"danger"}
-          className="shadow-xl text-lg"
-          size="md"
-          onClick={() => setObtenerUbicacion(true)}
+          className={`${
+            obtenerUbicacion ? " bg-amber-500" : "bg-red-600"
+          } shadow-xl text-white text-lg`}
+         
+          size="lg"
+          onClick={() => setObtenerUbicacion(!obtenerUbicacion)}
         >
-          Obtener Ubicación real
-        </Button>
-        <Button
-          type="button"
-          className="shadow-xl text-lg text-white bg-amber-500"
-          size="md"
-          onClick={() => {
-            setObtenerUbicacion(false);
-            obtenerInformacionCiudadano();
-          }}
-        >
-          Quitar Ubicación real
+          {!obtenerUbicacion
+            ? "Obtener Ubicación Actual"
+            : "Quitar Ubicación Actual"}
         </Button>
       </div>
 

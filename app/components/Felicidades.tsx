@@ -14,9 +14,9 @@ const Felicidades = () => {
           <p className="text-[22px] text-center p-3.5 mt-5 mb-11 text-balance">
             ¡Felicidades! {"\n"} en el día seleccionado, uno de nuestros
             voluntarios se pondrá en contacto contigo para facilitarte el
-            traslado a tu lugar de votación. Queremos asegurarnos de que llegues
-            sin inconvenientes, así que no dudes en hacer cualquier pregunta que
-            tengas al siguiente correo:{" "}
+            traslado a tu lugar de votación. Si tienes alguna duda, sugerencia o
+            un problema con la página, puedes enviarnos un mensaje al siguiente
+            correo:{" "}
             <a
               href="mailto:mesadeayuda@matisen.cl"
               className="text-blue-600 underline"
