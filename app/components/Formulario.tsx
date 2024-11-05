@@ -287,20 +287,7 @@ const Formulario = ({ onNext, onPrevious }: Props) => {
             {...register("calle")}
           />
         </div>
-        {/*  <div>
-          <ReactGoogleAutocomplete
-            apiKey={"AIzaSyAk2TCBSgd5wkGy4KAXYhZiGEXXiR_Degk"}
-            style={{ width: "90%" }}
-            onPlaceSelected={(place) => {
-              console.log(place);
-            }}
-            options={{
-              types: ["establishment", "geocode"],
-              componentRestrictions: { country: "cl" },
-            }}
-            {...register("calle")}
-          />
-        </div> */}
+   
         <div className="mt-3 flex justify-center">
           <Calendar
             classNames={{ content: "bg-white text-xl ", title: "font-bold" }}
